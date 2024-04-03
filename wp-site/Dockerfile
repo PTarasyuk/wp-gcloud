@@ -6,8 +6,8 @@ COPY . /var/www/html
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
-    && copy wp-cli.phar /usr/local/bin/wp \
-    && copy /var/www/html/docker-entrypoint.sh /usr/local/bin \
+    && cp wp-cli.phar /usr/local/bin/wp \
+    && cp /var/www/html/docker-entrypoint.sh /usr/local/bin \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
