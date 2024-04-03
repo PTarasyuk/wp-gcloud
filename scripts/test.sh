@@ -1,0 +1,7 @@
+#!/bin/bash
+
+WORDPRESS_DB_HOST="localhos:3306"
+
+WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST/:/\/}
+
+echo "$WORDPRESS_DB_HOST"
