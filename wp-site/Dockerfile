@@ -1,8 +1,8 @@
 FROM wordpress:6.4.3-php8.3-apache
-WORKDIR /var/www/html
+#WORKDIR /var/www/html
 EXPOSE 80
 
-COPY . .
+COPY . /var/www/html
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
