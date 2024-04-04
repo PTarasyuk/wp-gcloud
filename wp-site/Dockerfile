@@ -6,8 +6,7 @@ COPY wp-config.php wp-config.php
 COPY wp-content wp-content
 COPY docker-entrypoint.sh /user/local/bin/
 
-RUN chmod +x wp-init.sh \
-    && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
