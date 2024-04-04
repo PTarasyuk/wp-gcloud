@@ -112,6 +112,64 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
     else
         echo >&2 "WordPress is already installed."
     fi
+
+    # Update WordPress Site
+    if su -s /bin/bash -c "wp core is-installed --path=$PWD" $user; then
+        # Activate theme 'kidsko.pl'
+        if su -s /bin/bash -c "wp theme list --field=name --path=$PWD" $user | grep -q 'kidsko'; then
+            if ! su -s /bin/bash -c "wp theme is-active kidsko --path=$PWD" $user; then
+                su -s /bin/bash -c "wp theme activate kidsko --path=$PWD" $user
+                echo >&2 "Theme 'kidsko.pl' activated."
+            else
+                echo >&2 "Theme 'kidsko.pl' is already activated."
+            fi        
+        else
+            echo >&2 "Theme 'kidsko.pl' is not installed."
+        fi
+
+        # Activate plugin 'interactivity-block'
+        if su -s /bin/bash -c "wp plugin list --field=name --path=$PWD" $user | grep -q 'interactivity-block'; then
+            if ! su -s /bin/bash -c "wp plugin is-active interactivity-block --path=$PWD" $user; then
+                su -s /bin/bash -c "wp plugin activate interactivity-block --path=$PWD" $user
+                echo >&2 "Plugin 'interactivity-block' activated."
+            else
+                echo >&2 "Plugin 'interactivity-block' is already activated."
+            fi
+        else
+            echo >&2 "Plugin 'interactivity-block' is not installed."
+        fi
+    else
+        echo >&2 "WordPress is not installed."
+    fi
+
+    # Get the list of inactive plugins
+    inactive_plugins=$(su -s /bin/bash -c "wp plugin list --status=inactive --field=name --path=$PWD" $user)
+
+    echo >&2 "Inactive plugins: $inactive_plugins"
+
+    # If there are any inactive plugins, delete them
+    if [ -n "$inactive_plugins" ]; then
+        for plugin in $inactive_plugins; do
+            su -s /bin/bash -c "wp plugin delete $plugin --path=$PWD" $user
+            echo >&2 "Deleting plugin: $plugin"
+        done
+        echo >&2 "Inactive plugins deleted."
+    fi
+
+    # Get the list of inactive themes
+    inactive_themes=$(su -s /bin/bash -c "wp theme list --status=inactive --field=name --path=$PWD" $user)
+
+    echo >&2 "Inactive themes: $inactive_themes"
+
+    # If there are any inactive themes, delete them
+    if [ -n "$inactive_themes" ]; then
+        for theme in $inactive_themes; do
+            su -s /bin/bash -c "wp theme delete $theme --path=$PWD" $user
+            echo >&2 "Deleting theme: $theme"
+        done
+        echo >&2 "Inactive themes deleted."
+    fi
+
 fi
 
 exec "$@"
