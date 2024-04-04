@@ -4,11 +4,15 @@ EXPOSE 80
 
 COPY wp-config.php wp-config.php
 COPY wp-content wp-content
-COPY docker-entrypoint.sh /user/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp
+ENV WORDPRESS_CLI_VERSION 2.10.0
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh; \
+    set -ex; \
+    curl -o /usr/local/bin/wp -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar"; \
+    chmod +x /usr/local/bin/wp; \
+    wp --allow-root --version
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 CMD ["apache2-foreground"]

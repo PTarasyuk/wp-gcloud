@@ -94,6 +94,23 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 			fi
 		done
 	fi
+
+    if ! su -s /bin/bash -c "wp core is-installed --path=$PWD" $user 2>/dev/null; then
+        echo >&2 "WordPress is not installed. Starting installation..."
+
+        # Install WordPress
+        su -s /bin/bash -c "wp core install \
+           --url=$WORDPRESS_URL \
+           --title=$WORDPRESS_TITLE \
+           --admin_user=$WORDPRESS_DB_USER \
+           --admin_password=$WORDPRESS_DB_PASSWORD \
+           --admin_email=$WORDPRESS_ADMIN_EMAIL \
+           --path=$PWD" $user
+        
+        echo >&2 "WordPress installation completed."
+    else
+        echo >&2 "WordPress is already installed."
+    fi
 fi
 
 exec "$@"
