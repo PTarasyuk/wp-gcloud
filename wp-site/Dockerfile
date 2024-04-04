@@ -14,5 +14,5 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh; \
     chmod +x /usr/local/bin/wp; \
     wp --allow-root --version
 
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "docker-entrypoint.sh" ]
 CMD ["apache2-foreground"]
