@@ -2,7 +2,6 @@ FROM wordpress:6.5.0-php8.3-apache
 WORKDIR /var/www/html
 EXPOSE 80
 
-COPY wp-config.php wp-config.php
 COPY wp-content wp-content
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
